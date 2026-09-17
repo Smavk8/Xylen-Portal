@@ -1,0 +1,361 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Xylen Management Telecom Roaming & SIM Fleet API",
+    "description": "Integration API for the Xylen Management portal (portal.xylen.net) enabling automated SIM lifecycle management, QA tester assignment, daily MB telemetry ingestion, and forecast reporting.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://portal.xylen.net/api",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/sims": {
+      "get": {
+        "summary": "List SIM Cards",
+        "description": "Returns a filtered list of SIM cards and eSIM profiles in the fleet.",
+        "parameters": [
+          { "name": "project", "in": "query", "schema": { "type": "string", "enum": ["Ucell", "Uz Mobile"] } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } },
+          { "name": "q", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of SIM cards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SimItem" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Register New SIM",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SimItem" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "SIM registered" }
+        }
+      }
+    },
+    "/assignments": {
+      "get": {
+        "summary": "List Active Test Assignments",
+        "responses": {
+          "200": {
+            "description": "List of tester assignments with quotas and progress",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/AssignmentItem" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Assign Tester to SIM",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AssignmentInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Assignment created" }
+        }
+      }
+    },
+    "/submissions": {
+      "get": {
+        "summary": "Get Testing Submissions & Telemetry",
+        "parameters": [
+          { "name": "dateFrom", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "dateTo", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "testerName", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of submissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/SubmissionItem" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit Field Test Telemetry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SubmissionInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Submission recorded" }
+        }
+      }
+    },
+    "/v1/telemetry/minute": {
+      "get": {
+        "summary": "Get Minute-by-Minute Telemetry Records",
+        "parameters": [
+          { "name": "mobile_no", "in": "query", "schema": { "type": "string" } },
+          { "name": "user_email", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of minute telemetry records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/MinuteTelemetryRecord" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ingest Minute-by-Minute Telemetry Logs",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/MinuteTelemetryRecord" }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Minute telemetry logged successfully" }
+        }
+      }
+    },
+    "/v1/telemetry/record": {
+      "post": {
+        "summary": "Batch Telemetry Ingestion from Android Client",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AndroidTelemetryBatch" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Batch recorded successfully" }
+        }
+      }
+    },
+    "/v1/heartbeat": {
+      "post": {
+        "summary": "SIM & Device Card Heartbeat",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DeviceHeartbeat" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Heartbeat updated successfully" }
+        }
+      }
+    },
+    "/forecast": {
+      "get": {
+        "summary": "Get Monthly Target Forecast",
+        "responses": {
+          "200": {
+            "description": "Forecast metrics across MNO partners",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ForecastRateItem" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SimItem": {
+        "type": "object",
+        "required": ["id", "mno", "simNumber", "mobileNumber", "project", "status"],
+        "properties": {
+          "id": { "type": "integer" },
+          "supplier": { "type": "string" },
+          "project": { "type": "string", "enum": ["Ucell", "Uz Mobile"] },
+          "mno": { "type": "string" },
+          "simNumber": { "type": "string", "description": "ICCID" },
+          "mobileNumber": { "type": "string", "description": "E.164 MSISDN" },
+          "isEsim": { "type": "boolean" },
+          "tester": { "type": "string" },
+          "status": { "type": "string", "enum": ["Active", "In Transit", "Active (with issue)", "Steered", "Dormant", "Sim Issue", "Disconnection"] },
+          "missing": { "type": "array", "items": { "type": "string" } },
+          "roamingDates": { "type": "string" },
+          "tariff": { "type": "string" }
+        }
+      },
+      "AssignmentInput": {
+        "type": "object",
+        "required": ["testerName", "simId", "testDays", "breakDays", "startDate", "endDate", "dailyTargetMB"],
+        "properties": {
+          "testerName": { "type": "string" },
+          "simId": { "type": "integer" },
+          "testDays": { "type": "integer" },
+          "breakDays": { "type": "integer" },
+          "startDate": { "type": "string", "format": "date" },
+          "endDate": { "type": "string", "format": "date" },
+          "dailyTargetMB": { "type": "number" }
+        }
+      },
+      "AssignmentItem": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "testerName": { "type": "string" },
+          "mno": { "type": "string" },
+          "simNumber": { "type": "string" },
+          "mobileNumber": { "type": "string" },
+          "testDays": { "type": "integer" },
+          "breakDays": { "type": "integer" },
+          "startDate": { "type": "string" },
+          "endDate": { "type": "string" },
+          "dailyTargetMB": { "type": "number" },
+          "submittedMB": { "type": "number" },
+          "monthlyTargetMB": { "type": "number" },
+          "status": { "type": "string" }
+        }
+      },
+      "SubmissionInput": {
+        "type": "object",
+        "required": ["testerName", "projectName", "mno", "mobileNumber", "mbUsed"],
+        "properties": {
+          "testerName": { "type": "string" },
+          "projectName": { "type": "string" },
+          "mno": { "type": "string" },
+          "mobileNumber": { "type": "string" },
+          "date": { "type": "string" },
+          "mbUsed": { "type": "number" },
+          "comments": { "type": "string" },
+          "dataSession": { "type": "string" }
+        }
+      },
+      "SubmissionItem": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "testerName": { "type": "string" },
+          "projectName": { "type": "string" },
+          "mno": { "type": "string" },
+          "mobileNumber": { "type": "string" },
+          "date": { "type": "string" },
+          "mbUsed": { "type": "number" },
+          "comments": { "type": "string" },
+          "testComplete": { "type": "boolean" },
+          "dataSession": { "type": "string" }
+        }
+      },
+      "ForecastRateItem": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "project": { "type": "string" },
+          "mno": { "type": "string" },
+          "activeSims": { "type": "integer" },
+          "targetPerSimMB": { "type": "number" },
+          "monthlyTargetMB": { "type": "number" },
+          "actualSubmissionsMB": { "type": "number" },
+          "differenceMB": { "type": "number" },
+          "achievedPercent": { "type": "number" }
+        }
+      },
+      "MinuteTelemetryRecord": {
+        "type": "object",
+        "required": ["id", "user_email", "mobile_no", "usage_pm", "date_time", "connected_network"],
+        "properties": {
+          "id": { "type": "string", "example": "550e8400-e29b-41d4-a716-446655440000" },
+          "user_email": { "type": "string", "example": "tester1@company.com" },
+          "mobile_no": { "type": "string", "example": "+998901234567" },
+          "imsi_no": { "type": "string", "example": "434050123456789" },
+          "usage_pm": { "type": "number", "description": "MB transferred during minute", "example": 8.2 },
+          "date_time": { "type": "string", "example": "31.08.2026 18:18" },
+          "connected_network": { "type": "string", "example": "Ucell (LTE)" },
+          "created_at": { "type": "string", "example": "31.08.2026 18:19:00" }
+        }
+      },
+      "DeviceHeartbeat": {
+        "type": "object",
+        "properties": {
+          "device": { "type": "string" },
+          "battery": { "type": "integer" },
+          "wifi_ssid": { "type": "string" },
+          "sim_slot": { "type": "integer" },
+          "carrier": { "type": "string" },
+          "network_type": { "type": "string" },
+          "is_roaming": { "type": "boolean" },
+          "phone_number": { "type": "string" },
+          "iccid": { "type": "string" },
+          "imsi": { "type": "string" },
+          "private_key": { "type": "string" },
+          "today_mobile_bytes": { "type": "integer" },
+          "today_roaming_bytes": { "type": "integer" },
+          "today_wifi_bytes": { "type": "integer" }
+        }
+      },
+      "AndroidTelemetryBatch": {
+        "type": "object",
+        "required": ["telemetry"],
+        "properties": {
+          "telemetry": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "private_key": { "type": "string" },
+                "timestamp": { "type": "integer" },
+                "carrier": { "type": "string" },
+                "network_type": { "type": "string" },
+                "delta_bytes": { "type": "integer" },
+                "total_day_bytes": { "type": "integer" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

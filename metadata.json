@@ -1,0 +1,6 @@
+{
+  "name": "Xylen Management",
+  "description": "Xylen Telecom Testing & SIM Fleet Management Portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
