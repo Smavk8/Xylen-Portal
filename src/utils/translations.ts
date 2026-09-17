@@ -60,6 +60,7 @@ export const TRANSLATIONS = {
 
     // Table common
     search: 'Search',
+    reset: 'Reset',
     searchSimsPlaceholder: 'Search SIMs...',
     searchUsersPlaceholder: 'Search users by name, email or role...',
     searchProjectsPlaceholder: 'Search projects...',
@@ -283,6 +284,7 @@ export const TRANSLATIONS = {
 
     // Таблицы общие элементы
     search: 'Найти',
+    reset: 'Сбросить',
     searchSimsPlaceholder: 'Поиск SIM-карт...',
     searchUsersPlaceholder: 'Поиск по имени, email или роли...',
     searchProjectsPlaceholder: 'Поиск проектов...',

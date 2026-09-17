@@ -163,47 +163,6 @@ export const ForecastReportView: React.FC<ForecastReportViewProps> = ({
           </table>
         </div>
       </div>
-                      {r.mno}
-                    </td>
-                    <td className="py-2.5 px-3 text-center font-bold text-blue-600 dark:text-blue-400">
-                      {r.activeSims}
-                    </td>
-                    <td className="py-2.5 px-3 text-right font-mono text-slate-600 dark:text-slate-400 whitespace-nowrap">
-                      {formatNumber(r.targetPerSimMB)}
-                    </td>
-                    <td className="py-2.5 px-3 text-right font-mono font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                      {formatNumber(r.monthlyTargetMB)}
-                    </td>
-                    <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-900 dark:text-white whitespace-nowrap">
-                      {formatNumber(r.actualSubmissionsMB)}
-                    </td>
-                    <td
-                      className={`py-2.5 px-3 text-right font-mono font-bold whitespace-nowrap ${
-                        isNegative ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'
-                      }`}
-                    >
-                      {formatNumber(r.differenceMB)}
-                    </td>
-                    <td className="py-2.5 px-3 text-center whitespace-nowrap">
-                      <span
-                        className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
-                          r.achievedPercent >= 70
-                            ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
-                            : r.achievedPercent >= 30
-                            ? 'bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
-                            : 'bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
-                        }`}
-                      >
-                        {r.achievedPercent}%
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   );
 };
