@@ -206,3 +206,24 @@ export interface UserProfile {
   assignedDevicesCount: number;
   lastLogin: string;
 }
+
+export interface CdrRecord {
+  id: string;
+  timestamp: string;
+  testerName: string;
+  userEmail: string;
+  mobileNo: string;
+  imsiNo: string;
+  mno: string;
+  project: 'Ucell' | 'Uz Mobile';
+  cellId: string;
+  tac: string;
+  band: string;
+  rsrp: number;
+  sinr: number;
+  uploadMb: number;
+  downloadMb: number;
+  totalMb: number;
+  apn: string;
+  pdpStatus: 'Connected' | 'Idle' | 'Handover' | 'Terminated';
+}

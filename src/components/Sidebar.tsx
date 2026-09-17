@@ -215,20 +215,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 >
                   Sims Required
                 </button>
-                <button
-                  id="nav-subitem-cdrs"
-                  onClick={() => handleNavClick('cdrs')}
-                  className={`w-full text-left px-3 py-1.5 rounded-md text-[13.5px] transition-colors cursor-pointer flex items-center justify-between ${
-                    currentTab === 'cdrs' || currentTab === 'minute_telemetry'
-                      ? 'text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/60 dark:bg-blue-900/30'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/40'
-                  }`}
-                >
-                  <span>CDRs</span>
-                  <span className="text-[9px] font-extrabold bg-emerald-100 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                    LIVE
-                  </span>
-                </button>
               </div>
             )}
           </div>
@@ -274,7 +260,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
           </div>
 
-          {/* 7. Tickets */}
+          {/* 7. CDRs (Between Reports and Tickets) */}
+          <button
+            id="nav-item-cdrs"
+            onClick={() => handleNavClick('cdrs')}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-md text-[14px] font-medium transition-colors cursor-pointer ${
+              currentTab === 'cdrs' || currentTab === 'minute_telemetry'
+                ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-semibold'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-5 h-5 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                <Activity className="w-4 h-4" />
+              </span>
+              <span>{t('cdrs', language)}</span>
+            </div>
+            <span className="text-[9px] font-extrabold bg-emerald-100 dark:bg-emerald-900/80 text-emerald-700 dark:text-emerald-300 px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+              LIVE
+            </span>
+          </button>
+
+          {/* 8. Tickets */}
           <button
             id="nav-item-tickets"
             onClick={() => handleNavClick('tickets')}
